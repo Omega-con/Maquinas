@@ -1,0 +1,50 @@
+using Library.Base;
+
+namespace Library.Player;
+
+public class MusicPlayer
+{
+    public StateMachine Machine { get; }
+
+    // Entradas / Alfabeto
+    public InputSymbol PlayButton { get; } = new("Play");
+    public InputSymbol PauseButton { get; } = new("Pause");
+    public InputSymbol StopButton { get; } = new("Stop");
+
+    // Estados
+    public State StoppedState { get; } = new("Stopped");
+    public State PlayingState { get; } = new("Playing");
+    public State PausedState { get; } = new("Paused");
+
+    public MusicPlayer()
+    {
+        Machine = new StateMachine();
+
+        // 1. Agregar Alfabeto
+        Machine.AddToAlphabet(PlayButton);
+        Machine.AddToAlphabet(PauseButton);
+        Machine.AddToAlphabet(StopButton);
+
+        // 2. Configurar Transiciones entre estados
+        // Desde Stopped
+        StoppedState.AddTransition(PlayButton, PlayingState);
+
+        // Desde Playing
+        PlayingState.AddTransition(PauseButton, PausedState);
+        PlayingState.AddTransition(StopButton, StoppedState);
+
+        // Desde Paused
+        PausedState.AddTransition(PlayButton, PlayingState);
+        PausedState.AddTransition(StopButton, StoppedState);
+
+        // 3. Agregar Estados a la Máquina
+        Machine.AddState(StoppedState); // Queda como estado inicial por ser el primero
+        Machine.AddState(PlayingState);
+        Machine.AddState(PausedState);
+    }
+
+    // Métodos de conveniencia para operar el reproductor
+    public void PressPlay() => Machine.ProcessInput(PlayButton);
+    public void PressPause() => Machine.ProcessInput(PauseButton);
+    public void PressStop() => Machine.ProcessInput(StopButton);
+}

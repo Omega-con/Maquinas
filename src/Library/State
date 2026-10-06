@@ -1,0 +1,39 @@
+namespace Library.Base;
+
+public class State
+{
+    public string Name { get; }
+    private readonly List<Transition> transitions = new();
+
+    public State(string name)
+    {
+        Name = name;
+    }
+
+    public void AddTransition(InputSymbol input, State nextState)
+    {
+        transitions.Add(new Transition(input, nextState));
+    }
+
+    public State? GetNextState(InputSymbol input)
+    {
+        foreach (var transition in transitions)
+        {
+            if (transition.IsTriggeredBy(input))
+            {
+                return transition.NextState;
+            }
+        }
+        return null; // Si no hay transición definida para la entrada, permanece o ignora
+    }
+
+    public virtual void OnEnter()
+    {
+        // Sobrescribir en subclases si se requiere lógica específica
+    }
+
+    public virtual void OnExit()
+    {
+        // Sobrescribir en subclases si se requiere lógica específica
+    }
+}

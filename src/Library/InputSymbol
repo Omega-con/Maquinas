@@ -1,0 +1,11 @@
+namespace Library.Base;
+
+public class InputSymbol
+{
+    public string Name { get; }
+
+    public InputSymbol(string name)
+    {
+        Name = name;
+    }
+}

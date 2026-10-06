@@ -1,0 +1,14 @@
+using Library.Player;
+
+var player = new MusicPlayer();
+
+Console.WriteLine($"Estado inicial: {player.Machine.CurrentState?.Name}"); // Output: Stopped
+
+player.PressPlay();
+Console.WriteLine($"Luego de Play: {player.Machine.CurrentState?.Name}"); // Output: Playing
+
+player.PressPause();
+Console.WriteLine($"Luego de Pause: {player.Machine.CurrentState?.Name}"); // Output: Paused
+
+player.PressStop();
+Console.WriteLine($"Luego de Stop: {player.Machine.CurrentState?.Name}"); // Output: Stopped

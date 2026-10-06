@@ -1,0 +1,18 @@
+namespace Library.Base;
+
+public class Transition
+{
+    public InputSymbol TriggerSymbol { get; }
+    public State NextState { get; }
+
+    public Transition(InputSymbol triggerSymbol, State nextState)
+    {
+        TriggerSymbol = triggerSymbol;
+        NextState = nextState;
+    }
+
+    public bool IsTriggeredBy(InputSymbol input)
+    {
+        return TriggerSymbol.Equals(input) || TriggerSymbol.Name == input.Name;
+    }
+}

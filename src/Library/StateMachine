@@ -1,0 +1,60 @@
+namespace Library.Base;
+
+public class StateMachine
+{
+    private readonly List<State> states = new();
+    private readonly List<InputSymbol> alphabet = new();
+
+    public State? CurrentState { get; set; }
+
+    public void AddToAlphabet(InputSymbol inputSymbol)
+    {
+        if (!alphabet.Contains(inputSymbol))
+        {
+            alphabet.Add(inputSymbol);
+        }
+    }
+
+    public void AddState(State state)
+    {
+        if (!states.Contains(state))
+        {
+            states.Add(state);
+            // El primer estado agregado se establece como inicial por defecto
+            if (CurrentState == null)
+            {
+                CurrentState = state;
+            }
+        }
+    }
+
+    public bool ProcessInput(InputSymbol input)
+    {
+        if (CurrentState == null) return false;
+
+        State? nextState = CurrentState.GetNextState(input);
+        if (nextState != null)
+        {
+            CurrentState.OnExit();
+            CurrentState = nextState;
+            CurrentState.OnEnter();
+            return true;
+        }
+
+        // Entrada ignorada si no hay transición válida definida
+        return false;
+    }
+
+    public bool ProcessInputs(InputSymbol[] inputs)
+    {
+        bool allProcessed = true;
+        foreach (var input in inputs)
+        {
+            if (!ProcessInput(input))
+            {
+                allProcessed = false;
+            }
+        }
+        return allProcessed;
+    }
+}
